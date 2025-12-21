@@ -1,0 +1,282 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    session:
+      timeout: 30m
+      cookie:
+        name: SESSIONID
+        http-only: true
+        secure: true
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 1024
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+
+spring:
+  application:
+    name: order-management-service
+  profiles:
+    active: local
+    group:
+      local: common,local-db
+      dev: common,dev-db,dev-auth
+      prod: common,prod-db,prod-auth,prod-cache
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/orderdb
+    username: ${DB_USERNAME:order_user}
+    password: ${DB_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: OrderHikariPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      connection-timeout: 30000
+      leak-detection-threshold: 60000
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        default_batch_fetch_size: 100
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 50
+          batch_versioned_data: true
+        query:
+          in_clause_parameter_padding: true
+          plan_cache_max_size: 2048
+        connection:
+          provider_disables_autocommit: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            scope:
+              - read:user
+              - user:email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+      resourceserver:
+        jwt:
+          issuer-uri: https://auth.example.com
+          jwk-set-uri: https://auth.example.com/.well-known/jwks.json
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false
+      key-prefix: "order:"
+      use-key-prefix: true
+
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    timeout: 2000ms
+    lettuce:
+      pool:
+        max-active: 16
+        max-idle: 8
+        min-idle: 4
+        max-wait: 1000ms
+      shutdown-timeout: 100ms
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.example.order.event
+        max.poll.records: 100
+        max.poll.interval.ms: 300000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+    listener:
+      ack-mode: manual
+      concurrency: 3
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+logging:
+  level:
+    root: INFO
+    com.example.order: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.apache.kafka: WARN
+    io.lettuce.core: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/order-service.log
+    max-size: 100MB
+    max-history: 30
+    total-size-cap: 3GB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,loggers,caches
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when_authorized
+      show-components: when_authorized
+      probes:
+        enabled: true
+      group:
+        readiness:
+          include: db,redis,kafka
+        liveness:
+          include: ping
+    loggers:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+    export:
+      prometheus:
+        enabled: true
+  health:
+    db:
+      enabled: true
+    redis:
+      enabled: true
+    kafka:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 80
+      inventoryService:
+        register-health-indicator: true
+        sliding-window-size: 20
+        failure-rate-threshold: 60
+  retry:
+    instances:
+      paymentService:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - java.io.IOException
+          - java.net.SocketTimeoutException
+  ratelimiter:
+    instances:
+      orderCreation:
+        limit-for-period: 100
+        limit-refresh-period: 1s
+        timeout-duration: 500ms
+
+app:
+  order:
+    max-items-per-order: 50
+    order-expiry-minutes: 30
+    allowed-currencies:
+      - USD
+      - EUR
+      - KRW
+      - JPY
+  notification:
+    enabled: true
+    channels:
+      - email
+      - sms
+      - push
+    templates:
+      order-created: "ORDER_CREATED_V2"
+      order-shipped: "ORDER_SHIPPED_V1"
+      order-delivered: "ORDER_DELIVERED_V1"
+  feature-flags:
+    new-checkout-flow: false
+    async-inventory-check: true
+    split-payment: false
+  external-services:
+    payment:
+      base-url: https://api.payment-provider.com/v2
+      timeout: 5000
+      api-key: ${PAYMENT_API_KEY}
+    shipping:
+      base-url: https://api.shipping-provider.com/v1
+      timeout: 3000
+      api-key: ${SHIPPING_API_KEY}
+    inventory:
+      base-url: http://inventory-service:8080
+      timeout: 2000
