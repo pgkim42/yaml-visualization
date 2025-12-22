@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Header, SplitPane, StatusBar } from './components/Layout';
 import { YamlEditor, EditorToolbar } from './components/Editor';
-import { TreeViewer } from './components/Viewer';
+import { ViewerContainer } from './components/Viewer';
 import { useStore } from './store/useStore';
 import { useYamlParser, useLocalStorage, useKeyboardShortcuts } from './hooks';
 
@@ -35,7 +35,7 @@ function App() {
             </div>
           </div>
         }
-        right={<TreeViewer />}
+        right={<ViewerContainer />}
       />
 
       <StatusBar />

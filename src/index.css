@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* React Flow 다크모드 컨트롤 */
+.react-flow-controls-dark button {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+.react-flow-controls-dark button:hover {
+  background: #4b5563;
+}
+
+/* React Flow 다크모드 미니맵 */
+.react-flow-minimap-dark {
+  background: #1f2937;
+}

@@ -9,13 +9,8 @@ export const TreeViewer = () => {
 
   return (
     <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
-      {/* 헤더 */}
+      {/* 툴바 */}
       <div className="h-10 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 flex items-center gap-1">
-        <FolderTree className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">
-          트리 뷰어
-        </span>
-
         <div className="flex-1" />
 
         <ToolbarButton icon={ChevronsUpDown} onClick={expandAll} title="전체 펼치기">

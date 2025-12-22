@@ -36,6 +36,39 @@ export interface ParseResult {
 // 테마 타입
 export type Theme = "light" | "dark";
 
+// 뷰어 타입
+export type ViewerType = 'tree' | 'treemap' | 'sunburst' | 'mindmap';
+
+// Nivo Treemap 데이터 타입
+export interface NivoTreemapNode {
+  id: string;
+  name: string;
+  path: string;
+  value?: number;
+  children?: NivoTreemapNode[];
+  nodeType: NodeType;
+}
+
+// Nivo Sunburst 데이터 타입
+export interface NivoSunburstNode {
+  id: string;
+  name: string;
+  path: string;
+  value?: number;
+  children?: NivoSunburstNode[];
+  nodeType: NodeType;
+}
+
+// React Flow 마인드맵 노드 데이터 타입
+export interface MindmapNodeData extends Record<string, unknown> {
+  label: string;
+  path: string;
+  nodeType: NodeType;
+  depth: number;
+  isSearchMatch?: boolean;
+  isSelected?: boolean;
+}
+
 // 앱 상태 타입
 export interface AppState {
   // YAML 콘텐츠
@@ -66,6 +99,10 @@ export interface AppState {
   // UI 상태 - 테마
   theme: Theme;
   toggleTheme: () => void;
+
+  // 뷰어 타입
+  currentViewer: ViewerType;
+  setCurrentViewer: (viewer: ViewerType) => void;
 
   // 선택 상태
   selectedPath: string | null;

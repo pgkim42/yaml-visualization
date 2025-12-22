@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AppState, TreeNodeData, YamlError, Theme, ParseResult } from '../types';
+import type { AppState, TreeNodeData, YamlError, Theme, ParseResult, ViewerType } from '../types';
 import { SAMPLE_YAML } from '../constants';
 
 // 모든 노드의 경로를 수집하는 헬퍼 함수
@@ -63,6 +63,10 @@ export const useStore = create<AppState>((set) => ({
     set((state) => ({
       theme: state.theme === 'light' ? 'dark' : 'light',
     })),
+
+  // 뷰어 타입
+  currentViewer: 'tree' as ViewerType,
+  setCurrentViewer: (viewer: ViewerType) => set({ currentViewer: viewer }),
 
   // 선택 상태
   selectedPath: null,
