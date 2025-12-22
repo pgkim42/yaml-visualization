@@ -19,7 +19,7 @@ export const ViewerTabs = () => {
   const { currentViewer, setCurrentViewer } = useStore();
 
   return (
-    <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <div className="flex items-center gap-1 px-3 py-2 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
       {tabs.map((tab) => {
         const Icon = tab.icon;
         const isActive = currentViewer === tab.id;
@@ -29,15 +29,14 @@ export const ViewerTabs = () => {
             key={tab.id}
             onClick={() => setCurrentViewer(tab.id)}
             className={`
-              flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors
-              border-b-2 -mb-px
+              flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-all
               ${isActive
-                ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300'
               }
             `}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-3.5 h-3.5" />
             <span>{tab.label}</span>
           </button>
         );

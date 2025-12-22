@@ -33,17 +33,19 @@ export const Header = () => {
   };
 
   return (
-    <header className="h-14 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between">
+    <header className="h-14 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 flex items-center justify-between">
       {/* 로고 */}
-      <div className="flex items-center gap-2">
-        <FileJson className="w-6 h-6 text-blue-500" />
-        <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-gray-900 dark:bg-white rounded-lg flex items-center justify-center">
+          <FileJson className="w-4 h-4 text-white dark:text-gray-900" />
+        </div>
+        <h1 className="text-base font-medium text-gray-900 dark:text-gray-100 tracking-tight">
           YAML Visualizer
         </h1>
       </div>
 
       {/* 버튼들 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         <IconButton icon={Upload} onClick={handleUpload} title="파일 열기" />
         <IconButton icon={Download} onClick={handleDownloadYaml} title="YAML 다운로드" />
         <IconButton icon={FileJson} onClick={handleDownloadJson} title="JSON으로 다운로드" />
@@ -51,16 +53,15 @@ export const Header = () => {
 
         <Divider />
 
-        {/* 테마 토글 - 아이콘이 조건부라 별도 처리 */}
         <button
           onClick={toggleTheme}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+          className="p-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
           title={theme === 'light' ? '다크 모드' : '라이트 모드'}
         >
           {theme === 'light' ? (
-            <Moon className="w-5 h-5" />
+            <Moon className="w-4 h-4" />
           ) : (
-            <Sun className="w-5 h-5" />
+            <Sun className="w-4 h-4" />
           )}
         </button>
       </div>

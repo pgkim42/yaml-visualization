@@ -26,9 +26,9 @@ export const EditorToolbar = () => {
   };
 
   return (
-    <div className="h-10 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 flex items-center gap-1">
-      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">
-        YAML 에디터
+    <div className="h-10 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 flex items-center gap-1">
+      <span className="text-xs font-medium text-gray-400 dark:text-gray-500 tracking-wide">
+        EDITOR
       </span>
 
       <div className="flex-1" />
@@ -37,16 +37,15 @@ export const EditorToolbar = () => {
         샘플
       </ToolbarButton>
 
-      {/* 복사 - 조건부 렌더링으로 별도 처리 */}
       <button
         onClick={handleCopy}
-        className="flex items-center gap-1 px-2 py-1 text-xs rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 transition-colors"
         title="클립보드에 복사"
       >
         {copied ? (
           <>
-            <Check className="w-3.5 h-3.5 text-green-500" />
-            <span className="text-green-500">복사됨</span>
+            <Check className="w-3.5 h-3.5 text-emerald-500" />
+            <span className="text-emerald-500">복사됨</span>
           </>
         ) : (
           <>

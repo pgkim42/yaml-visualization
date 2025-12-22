@@ -11,10 +11,10 @@ const MindmapViewer = lazy(() => import('./MindmapViewer'));
 
 // 로딩 폴백 컴포넌트
 const LoadingFallback = () => (
-  <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-    <div className="flex flex-col items-center gap-2 text-gray-400">
-      <Loader2 className="w-8 h-8 animate-spin" />
-      <span className="text-sm">로딩 중...</span>
+  <div className="h-full flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+    <div className="flex flex-col items-center gap-3 text-gray-400">
+      <Loader2 className="w-5 h-5 animate-spin" />
+      <span className="text-xs">Loading...</span>
     </div>
   </div>
 );

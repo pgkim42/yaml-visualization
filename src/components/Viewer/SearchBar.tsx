@@ -112,9 +112,9 @@ export const SearchBar = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+    <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
       {/* 검색 아이콘 */}
-      <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+      <Search className="w-3.5 h-3.5 text-gray-300 dark:text-gray-600 flex-shrink-0" />
 
       {/* 검색 입력 */}
       <input
@@ -122,44 +122,44 @@ export const SearchBar = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="검색..."
-        className="flex-1 min-w-0 bg-transparent text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 outline-none"
+        placeholder="Search..."
+        className="flex-1 min-w-0 bg-transparent text-xs text-gray-700 dark:text-gray-300 placeholder-gray-300 dark:placeholder-gray-600 outline-none"
       />
 
       {/* 검색 결과 카운트 & 네비게이션 */}
       {searchQuery && (
         <>
-          <span className="text-xs text-gray-500 whitespace-nowrap">
+          <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap font-medium">
             {searchResults.length > 0
               ? `${currentIndex + 1}/${searchResults.length}`
               : '0'}
           </span>
 
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center">
             <button
               onClick={handlePrev}
               disabled={searchResults.length === 0}
-              className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30"
+              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
               title="이전 (Shift+Enter)"
             >
-              <ChevronUp className="w-3.5 h-3.5 text-gray-500" />
+              <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
             </button>
             <button
               onClick={handleNext}
               disabled={searchResults.length === 0}
-              className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-30"
+              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30"
               title="다음 (Enter)"
             >
-              <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
+              <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
             </button>
           </div>
 
           <button
             onClick={handleClear}
-            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
             title="지우기 (Esc)"
           >
-            <X className="w-3.5 h-3.5 text-gray-500" />
+            <X className="w-3.5 h-3.5 text-gray-400" />
           </button>
         </>
       )}

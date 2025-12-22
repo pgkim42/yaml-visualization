@@ -8,9 +8,9 @@ export const TreeViewer = () => {
   const { treeData, expandAll, collapseAll, parseError, searchQuery } = useStore();
 
   return (
-    <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-950">
       {/* 툴바 */}
-      <div className="h-10 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-3 flex items-center gap-1">
+      <div className="h-10 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-4 flex items-center gap-1">
         <div className="flex-1" />
 
         <ToolbarButton icon={ChevronsUpDown} onClick={expandAll} title="전체 펼치기">
@@ -29,7 +29,7 @@ export const TreeViewer = () => {
       <div className="flex-1 overflow-auto">
         {parseError ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-400 p-4">
-            <p className="text-sm">YAML 파싱 에러</p>
+            <p className="text-xs font-medium">YAML 파싱 에러</p>
             <p className="text-xs mt-1 text-red-400">{parseError.message}</p>
           </div>
         ) : treeData ? (
@@ -37,9 +37,9 @@ export const TreeViewer = () => {
             <TreeNode node={treeData} searchQuery={searchQuery} />
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400">
-            <FolderTree className="w-12 h-12 mb-2 opacity-50" />
-            <p className="text-sm">YAML을 입력하면 트리가 표시됩니다</p>
+          <div className="flex flex-col items-center justify-center h-full text-gray-300 dark:text-gray-600">
+            <FolderTree className="w-10 h-10 mb-3" />
+            <p className="text-xs">YAML을 입력하면 트리가 표시됩니다</p>
           </div>
         )}
       </div>

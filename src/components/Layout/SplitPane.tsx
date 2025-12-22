@@ -83,27 +83,27 @@ export const SplitPane = ({
     return (
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* 탭 헤더 */}
-        <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="flex gap-1 p-2 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
           <button
             onClick={() => setActiveTab('editor')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-md transition-all ${
               activeTab === 'editor'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           >
-            <Code className="w-4 h-4" />
+            <Code className="w-3.5 h-3.5" />
             에디터
           </button>
           <button
             onClick={() => setActiveTab('viewer')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-md transition-all ${
               activeTab === 'viewer'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
             }`}
           >
-            <FolderTree className="w-4 h-4" />
+            <FolderTree className="w-3.5 h-3.5" />
             뷰어
           </button>
         </div>
@@ -134,8 +134,8 @@ export const SplitPane = ({
       {/* 구분선 (드래그 핸들) */}
       <div
         onMouseDown={handleMouseDown}
-        className={`w-1 bg-gray-200 dark:bg-gray-700 hover:bg-blue-400 dark:hover:bg-blue-500 cursor-col-resize transition-colors flex-shrink-0 ${
-          isDragging ? 'bg-blue-500' : ''
+        className={`w-px bg-gray-200 dark:bg-gray-700 hover:w-1 hover:bg-gray-400 dark:hover:bg-gray-500 cursor-col-resize transition-all flex-shrink-0 ${
+          isDragging ? 'w-1 bg-gray-400 dark:bg-gray-500' : ''
         }`}
       />
 

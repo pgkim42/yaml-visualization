@@ -21,9 +21,9 @@ export const ToolbarButton = memo(({
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`flex items-center gap-1 px-2 py-1 text-xs rounded
-      hover:bg-gray-200 dark:hover:bg-gray-700
-      text-gray-600 dark:text-gray-300 transition-colors
+    className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md
+      hover:bg-gray-100 dark:hover:bg-gray-700
+      text-gray-600 dark:text-gray-400 transition-colors
       disabled:opacity-30 disabled:cursor-not-allowed ${className}`}
     title={title}
   >

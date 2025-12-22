@@ -23,12 +23,12 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header />
 
       <SplitPane
         left={
-          <div className="h-full flex flex-col bg-white dark:bg-gray-800">
+          <div className="h-full flex flex-col bg-white dark:bg-gray-900">
             <EditorToolbar />
             <div className="flex-1">
               <YamlEditor />
