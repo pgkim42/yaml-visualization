@@ -1,9 +1,11 @@
-import { memo, useCallback, useMemo } from 'react';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { ChevronRight, ChevronDown, Copy, Check } from 'lucide-react';
 import type { TreeNodeData } from '../../types';
 import { useStore } from '../../store/useStore';
 import { TypeBadge } from './TypeBadge';
 import { LAYOUT } from '../../constants';
+import { formatPath } from '../../utils/pathUtils';
+import { copyToClipboard } from '../../utils/fileUtils';
 
 interface TreeNodeProps {
   node: TreeNodeData;
@@ -43,7 +45,8 @@ const highlightText = (text: string, query: string): React.ReactNode => {
 };
 
 export const TreeNode = memo(({ node, searchQuery = '' }: TreeNodeProps) => {
-  const { expandedNodes, toggleNode, selectedPath, setSelectedPath, searchResults } = useStore();
+  const { expandedNodes, toggleNode, selectedPath, setSelectedPath, searchResults, addToast } = useStore();
+  const [copied, setCopied] = useState(false);
 
   const isExpanded = useMemo(() => expandedNodes.has(node.path), [expandedNodes, node.path]);
   const hasChildren = useMemo(() => node.children.length > 0, [node.children.length]);
@@ -64,6 +67,30 @@ export const TreeNode = memo(({ node, searchQuery = '' }: TreeNodeProps) => {
     setSelectedPath(node.path);
   }, [node.path, setSelectedPath]);
 
+  // 경로 복사 핸들러
+  const handleCopyPath = useCallback(async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    // Shift 키를 누르면 배열 표기법, 아니면 점 표기법
+    const format = e.shiftKey ? 'bracket' : 'dot';
+    const formattedPath = formatPath(node.path, format);
+    
+    if (!formattedPath) {
+      addToast('루트 노드는 복사할 수 없습니다', 'error');
+      return;
+    }
+    
+    const success = await copyToClipboard(formattedPath);
+    
+    if (success) {
+      setCopied(true);
+      addToast(`경로 복사됨: ${formattedPath}`, 'success');
+      setTimeout(() => setCopied(false), 1000);
+    } else {
+      addToast('복사 실패', 'error');
+    }
+  }, [node.path, addToast]);
+
   // 들여쓰기
   const indent = node.depth * LAYOUT.TREE_INDENT_PX;
 
@@ -73,7 +100,7 @@ export const TreeNode = memo(({ node, searchQuery = '' }: TreeNodeProps) => {
       <div
         onClick={handleSelect}
         className={`
-          flex items-center gap-1.5 py-1 px-2 cursor-pointer
+          group flex items-center gap-1.5 py-1 px-2 cursor-pointer
           hover:bg-gray-100 dark:hover:bg-gray-700
           ${isSelected ? 'bg-blue-50 dark:bg-blue-900/30' : ''}
           ${isSearchMatch ? 'bg-yellow-50 dark:bg-yellow-900/20' : ''}
@@ -128,6 +155,23 @@ export const TreeNode = memo(({ node, searchQuery = '' }: TreeNodeProps) => {
               : `${node.children.length} keys`
             }
           </span>
+        )}
+
+        {/* 복사 버튼 - 호버 시만 표시 (root 노드 제외) */}
+        {node.key !== 'root' && (
+          <button
+            onClick={handleCopyPath}
+            title="경로 복사 (Shift+클릭: 배열 표기법)"
+            className={`
+              ml-auto p-1 rounded transition-opacity
+              ${copied 
+                ? 'opacity-100 text-green-500' 
+                : 'opacity-0 group-hover:opacity-100 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }
+            `}
+          >
+            {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+          </button>
         )}
       </div>
 

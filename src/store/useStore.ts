@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AppState, TreeNodeData, YamlError, Theme, ParseResult, ViewerType } from '../types';
+import type { AppState, TreeNodeData, YamlError, Theme, ParseResult, ViewerType, ToastType, Toast } from '../types';
 import { SAMPLE_YAML } from '../constants';
 
 // 모든 노드의 경로를 수집하는 헬퍼 함수
@@ -77,4 +77,23 @@ export const useStore = create<AppState>((set) => ({
   setSearchQuery: (query: string) => set({ searchQuery: query }),
   searchResults: [],
   setSearchResults: (results: string[]) => set({ searchResults: results }),
+
+  // 토스트 상태
+  toasts: [] as Toast[],
+  addToast: (message: string, type: ToastType) => {
+    const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
+    set((state) => ({
+      toasts: [...state.toasts, { id, message, type }],
+    }));
+    // 3초 후 자동 제거
+    setTimeout(() => {
+      set((state) => ({
+        toasts: state.toasts.filter((t) => t.id !== id),
+      }));
+    }, 3000);
+  },
+  removeToast: (id: string) =>
+    set((state) => ({
+      toasts: state.toasts.filter((t) => t.id !== id),
+    })),
 }));

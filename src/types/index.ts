@@ -36,6 +36,18 @@ export interface ParseResult {
 // 테마 타입
 export type Theme = "light" | "dark";
 
+// 토스트 타입
+export type ToastType = 'success' | 'error' | 'info';
+
+export interface Toast {
+  id: string;
+  message: string;
+  type: ToastType;
+}
+
+// 경로 복사 형식
+export type PathCopyFormat = 'dot' | 'bracket';
+
 // 뷰어 타입
 export type ViewerType = 'tree' | 'treemap' | 'sunburst' | 'mindmap';
 
@@ -113,4 +125,9 @@ export interface AppState {
   setSearchQuery: (query: string) => void;
   searchResults: string[];
   setSearchResults: (results: string[]) => void;
+
+  // 토스트 상태
+  toasts: Toast[];
+  addToast: (message: string, type: ToastType) => void;
+  removeToast: (id: string) => void;
 }

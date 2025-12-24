@@ -50,3 +50,56 @@ export const parsePathSegments = (path: string): string[] => {
   const matches = path.match(regex);
   return matches || [];
 };
+
+/**
+ * root. 접두사 제거
+ * 예: "root.spring.datasource" → "spring.datasource"
+ */
+export const removeRootPrefix = (path: string): string => {
+  if (path === 'root') return '';
+  if (path.startsWith('root.')) {
+    return path.slice(5);
+  }
+  return path;
+};
+
+/**
+ * 점 표기법으로 변환
+ * 예: "root.spring.datasource[0].url" → "spring.datasource[0].url"
+ */
+export const formatDotNotation = (path: string): string => {
+  return removeRootPrefix(path);
+};
+
+/**
+ * 배열 표기법으로 변환
+ * 예: "root.spring.datasource[0].url" → "['spring']['datasource'][0]['url']"
+ */
+export const formatBracketNotation = (path: string): string => {
+  const cleanPath = removeRootPrefix(path);
+  if (!cleanPath) return '';
+  
+  // 세그먼트 분해
+  const segments = parsePathSegments(cleanPath);
+  
+  return segments
+    .map((seg) => {
+      // 이미 배열 인덱스인 경우 ([0], [1] 등)
+      if (seg.startsWith('[') && seg.endsWith(']')) {
+        return seg;
+      }
+      // 일반 키는 ['key'] 형태로
+      return `['${seg}']`;
+    })
+    .join('');
+};
+
+/**
+ * 경로를 지정된 형식으로 변환
+ */
+export const formatPath = (path: string, format: 'dot' | 'bracket'): string => {
+  if (format === 'dot') {
+    return formatDotNotation(path);
+  }
+  return formatBracketNotation(path);
+};
